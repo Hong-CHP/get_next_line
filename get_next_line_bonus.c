@@ -1,84 +1,91 @@
 #include "get_next_line_bonus.h"
 
-char    *cut_line_and_rest(char *dest, char **line, char **rest)
+char    *cut_line(char *dest, char **rest)
 {
-    int i;
+    static char    *line;
+    int     end;
 
-    if(!dest)
+    if (!dest)
         return (NULL);
-    i = 0;
-    while (dest[i] != '\n')
-        i++;
-    if (dest[i] == '\n')
-        line = ft_substr(dest, 0, i + 1);
+    end = 0;
+    while (dest[end] != '\n' && dest[end] != '\0')
+        end++;
+    if (dest[end] == '\n')
+        line = ft_substr(dest, 0, end + 1);
+    else
+        line = ft_substr(dest, 0, end);
+    if(dest[end] != '\0')
+        *rest = ft_strdup(&dest[end + 1]);
+    else
+        *rest = NULL;
+    free(dest);
+    return (line);
 }
 
-char    *allocate_init_buffer(int fd, char  **dest)
+char    *allo_init_buf(int fd, char **dest)
 {
-    char    *buf;
+    char    *buff;
     size_t  bytes_read;
 
     if (fd <= 0 || BUFFER_SIZE <= 0)
         return (NULL);
-    buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-    if (!buf)
-        return(NULL);
+    buff = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+    if (!buff)
+        return (NULL);
     if (!*dest)
-        dest = ft_strdup("");
+        *dest = ft_strdup("");
     while (ft_strchr(*dest, '\n') == NULL)
     {
-        bytes_read = read(fd, buf, BUFFER_SIZE);
+        bytes_read = read(fd, buff, BUFFER_SIZE);
         if (bytes_read <= 0)
         {
-            free(buf);
+            free(buff);
             return (NULL);
         }
-        buf[bytes_read] = '\0';
-        *dest = ft_strjoin(*dest, buf);
+        buff[bytes_read] = '\0';
+        *dest = ft_strjoin(*dest, buff);
     }
     return (*dest);
 }
+
 char    *get_next_line_bonus(int fd)
 {
-    static char **dest;
-    char    **line;
-    char    **rest;
-    
-    dest = allocate_init_buffer(fd, &dest);
+    char    *line;
+    char    *rest;
+    static char    *dest[1024];
 
+    dest[fd] = allo_init_buf(fd, &dest[fd]);
+    line = cut_line(dest[fd], &rest);
+    dest[fd] = rest;
+    return (line);
 }
 
-int ft_display_file(char *file)
+void ft_display_file(char *file1, char *file2, char *file3)
 {
+    int fd1;
+    int fd2;
     int fd3;
-    int fd4;
-    int fd5;
 
-    fd3 = open(file, O_RDONLY);
-    fd4 = open(file, O_RDONLY);
-    fd5 = open(file, O_RDONLY);
-    get_next_line_bonus(fd3);
-    get_next_line_bonus(fd4);
-    get_next_line_bonus(fd5);
-    get_next_line_bonus(fd3);
-    get_next_line_bonus(fd4);
+    fd1 = open(file1, O_RDONLY);
+    fd2 = open(file2, O_RDONLY);
+    fd3 = open(file3, O_RDONLY);
+    printf("%s\n", get_next_line_bonus(fd1));
+    printf("%s\n", get_next_line_bonus(fd2));
+    printf("%s\n", get_next_line_bonus(fd3));
+    printf("%s\n", get_next_line_bonus(fd1));
+    printf("%s\n", get_next_line_bonus(fd2));
+    close(fd1);
+    close(fd2);
     close(fd3);
-    close(fd4);
-    close(fd5);
 }
 
 int main(int argc, char *argv[])
 {
-    int i;
-    char    *file1;
-    char    *file2;
-    char    *file3;
+    char    *file1 = argv[1];
+    char    *file2 = argv[2];
+    char    *file3 = argv[3];
 
-    i = 1;
     if (argc != 4)
         return (1);
-    ft_display_file(file1);
-    ft_display_file(file2);
-    ft_display_file(file3);
-
+    ft_display_file(file1, file2, file3);
 }

@@ -60,7 +60,7 @@ char    *ft_strjoin(char const *s1, char const *s2)
     char *tmp;
 
     if (!s1)
-        s1 = "";
+        s1 = ft_strdup("");
     if (!s2)
         s2 = "";
     dest = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
@@ -84,6 +84,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
         return (NULL);
     if (start >= ft_strlen(s))
         return (ft_strdup(""));
+    if (start + len >= ft_strlen(s))
+        len = ft_strlen(s) - start;
     res = (char *)malloc((len + 1) * sizeof(char));
     if (!res)
         return (NULL);
@@ -95,4 +97,3 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
     res[i] = '\0';
     return (res);
 }
-
