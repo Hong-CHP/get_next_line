@@ -54,14 +54,16 @@ char    *get_next_line(int fd)
 {
     char    *line;
     char    *rest;
+    char    *temp;
     static char    *dest;
 
     if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
         return (NULL);
-    dest = allo_init_buf(fd, &dest);
-    if (!dest)
+    temp = allo_init_buf(fd, &dest);
+    if (!temp)
         return (NULL);
-    if (dest[0] == '\0')
+    dest = temp;
+    if (dest[0] == '\0' || !dest)
     {
         free(dest);
         dest = NULL;
@@ -74,15 +76,20 @@ char    *get_next_line(int fd)
 }
 
 // void    ft_display_file(char *file)
-// {
+// {   
 //     int fd;
 
-//     open(file, O_RDONLY);
-//     fd = 1000;
-//     get_next_line(fd);
-//     //printf("%s\n", get_next_line(fd));
+//     fd = open(file, O_RDONLY);
 //     //get_next_line(fd);
-//     //get_next_line(fd);
+//     char *line = get_next_line(fd);
+//     printf("%s", line);
+//     free(line);
+//     // while (line)
+//     // {
+//     //     printf("%s", line);
+//     //     free(line);
+//     //     line = get_next_line(fd);
+//     // }
 //     close(fd);
 // }
 
@@ -92,7 +99,7 @@ char    *get_next_line(int fd)
 
 //     if (argc != 2)
 //         return (1);
-//     file = argv[1];    printf("hehe1\n");
+//     file = argv[1];
 //     //printf("%d\n", ft_strlen(""));
 //     ft_display_file(file);
 //     return (0);
