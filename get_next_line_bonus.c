@@ -1,78 +1,90 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hporta-c <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/24 12:15:55 by hporta-c          #+#    #+#             */
+/*   Updated: 2025/04/24 12:15:58 by hporta-c         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line_bonus.h"
 
-char    *cut_line(char *dest, char **rest)
+char	*cut_line(char *dest, char **rest)
 {
-    char    *line;
-    int     end;
+	char	*line;
+	int		end;
 
-    if (!dest)
-        return (NULL);
-    end = 0;
-    while (dest[end] != '\n' && dest[end] != '\0')
-        end++;
-    if (dest[end] == '\n')
-        line = ft_substr(dest, 0, end + 1);
-    else
-        line = ft_substr(dest, 0, end);
-    if(dest[end] != '\0')
-        *rest = ft_strdup(&dest[end + 1]);
-    else
-        *rest = NULL;
-    return (line);
+	if (!dest)
+		return (NULL);
+	end = 0;
+	while (dest[end] != '\n' && dest[end] != '\0')
+		end++;
+	if (dest[end] == '\n')
+		line = ft_substr(dest, 0, end + 1);
+	else
+		line = ft_substr(dest, 0, end);
+	if (dest[end] != '\0')
+		*rest = ft_strdup(&dest[end + 1]);
+	else
+		*rest = NULL;
+	return (line);
 }
 
-char    *allo_init_buf(int fd, char **dest)
+char	*allo_init_buf(int fd, char **dest)
 {
-    char    *buff;
-    char    *temp;
-    int  bytes_read;
+	char	*buff;
+	char	*temp;
+	int		bytes_read;
 
-    buff = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-    if (!buff)
-        return (NULL);
-    if (!*dest)
-        *dest = ft_strdup("");
-    bytes_read = 1;
-    while (bytes_read > 0 && ft_strchr(*dest, '\n') == NULL)
-    {
-        bytes_read = read(fd, buff, BUFFER_SIZE);
-        if (bytes_read <= 0)
-        {
-            free(buff);
-            return (*dest);
-        }
-        buff[bytes_read] = '\0';
-        temp = *dest;
-        *dest = ft_strjoin(*dest, buff);
-        free(temp);
-    }
-    free(buff);
-    return (*dest);
+	buff = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buff)
+		return (NULL);
+	if (!*dest)
+		*dest = ft_strdup("");
+	bytes_read = 1;
+	while (bytes_read > 0 && ft_strchr(*dest, '\n') == NULL)
+	{
+		bytes_read = read(fd, buff, BUFFER_SIZE);
+		if (bytes_read <= 0)
+		{
+			free(buff);
+			return (*dest);
+		}
+		buff[bytes_read] = '\0';
+		temp = *dest;
+		*dest = ft_strjoin(*dest, buff);
+		free(temp);
+	}
+	free(buff);
+	return (*dest);
 }
 
-char    *get_next_line_bonus(int fd)
+char	*get_next_line_bonus(int fd)
 {
-    char    *line;
-    char    *rest;
-    char    *temp;
-    static char    *dest[1024];
+	char		*line;
+	char		*rest;
+	char		*temp;
+	static char	*dest[1024];
 
-    if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
-        return (NULL);
-    temp = allo_init_buf(fd, &dest[fd]);
-    if (!temp)
-        return (NULL);
-    dest[fd] = temp;
-    if (!dest[fd] || dest[fd][0] == '\0')
-    {
-        free(dest[fd]);
-        dest[fd] = NULL;
-        return (NULL);
-    }
-    line = cut_line(dest[fd], &rest);
-    free(dest[fd]);
-    dest[fd] = rest;
-    return (line);
+	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
+		return (NULL);
+	temp = allo_init_buf(fd, &dest[fd]);
+	if (!temp)
+		return (NULL);
+	dest[fd] = temp;
+	if (!dest[fd] || dest[fd][0] == '\0')
+	{
+		free(dest[fd]);
+		dest[fd] = NULL;
+		return (NULL);
+	}
+	line = cut_line(dest[fd], &rest);
+	free(dest[fd]);
+	dest[fd] = rest;
+	return (line);
 }
 
 // void    ft_print_line(int fd)
