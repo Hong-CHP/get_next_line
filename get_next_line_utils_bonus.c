@@ -80,7 +80,7 @@ char    *ft_strjoin(char const *s1, char const *s2)
     char    *p;
 
     if (!s1)
-        s1 = "";
+        s1 = ft_strdup("");
     if (!s2)
         s2 = "";
     dest = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));

@@ -2,7 +2,7 @@
 
 char    *cut_line(char *dest, char **rest)
 {
-    static char    *line;
+    char    *line;
     int     end;
 
     if (!dest)
@@ -57,13 +57,13 @@ char    *get_next_line_bonus(int fd)
     char    *temp;
     static char    *dest[1024];
 
-    if (fd <= 0 || fd >= 1024 || BUFFER_SIZE <= 0)
+    if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
         return (NULL);
     temp = allo_init_buf(fd, &dest[fd]);
     if (!temp)
         return (NULL);
     dest[fd] = temp;
-    if (dest[fd][0] == '\0')
+    if (!dest[fd] || dest[fd][0] == '\0')
     {
         free(dest[fd]);
         dest[fd] = NULL;
@@ -75,45 +75,45 @@ char    *get_next_line_bonus(int fd)
     return (line);
 }
 
-void    ft_print_line(int fd)
-{
-    char    *line;
+// void    ft_print_line(int fd)
+// {
+//     char    *line;
 
-    while ((line = get_next_line_bonus(fd)) != NULL)
-    {
-        printf("%s\n", line);
-        free(line);
-    }
-}
+//     while ((line = get_next_line_bonus(fd)) != NULL)
+//     {
+//         printf("%s\n", line);
+//         free(line);
+//     }
+// }
 
-void ft_display_file(char *file1, char *file2, char *file3)
-{
-    int fd1;
-    int fd2;
-    int fd3;
-    char    *line;
+// void ft_display_file(char *file1, char *file2, char *file3)
+// {
+//     int fd1;
+//     int fd2;
+//     int fd3;
+//     char    *line;
 
-    fd1 = open(file1, O_RDONLY);
-    fd2 = open(file2, O_RDONLY);
-    fd3 = open(file3, O_RDONLY);
-    line = get_next_line_bonus(fd2);
-    printf("%s\n", line);
-    free(line);
-    // ft_print_line(fd1);
-    // ft_print_line(fd2);
-    // ft_print_line(fd3);
-    close(fd1);
-    close(fd2);
-    close(fd3);
-}
+//     fd1 = open(file1, O_RDONLY);
+//     fd2 = open(file2, O_RDONLY);
+//     fd3 = open(file3, O_RDONLY);
+//     line = get_next_line_bonus(fd2);
+//     printf("%s\n", line);
+//     free(line);
+//     ft_print_line(fd1);
+//     ft_print_line(fd2);
+//     ft_print_line(fd3);
+//     close(fd1);
+//     close(fd2);
+//     close(fd3);
+// }
 
-int main(int argc, char *argv[])
-{
-    char    *file1 = argv[1];
-    char    *file2 = argv[2];
-    char    *file3 = argv[3];
+// int main(int argc, char *argv[])
+// {
+//     char    *file1 = argv[1];
+//     char    *file2 = argv[2];
+//     char    *file3 = argv[3];
 
-    if (argc != 4)
-        return (1);
-    ft_display_file(file1, file2, file3);
-}
+//     if (argc != 4)
+//         return (1);
+//     ft_display_file(file1, file2, file3);
+// }

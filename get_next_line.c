@@ -63,7 +63,7 @@ char    *get_next_line(int fd)
     if (!temp)
         return (NULL);
     dest = temp;
-    if (dest[0] == '\0' || !dest)
+    if (!dest || dest[0] == '\0')
     {
         free(dest);
         dest = NULL;
@@ -74,22 +74,20 @@ char    *get_next_line(int fd)
     dest = rest;
     return (line);
 }
-
 // void    ft_display_file(char *file)
 // {   
 //     int fd;
 
 //     fd = open(file, O_RDONLY);
-//     //get_next_line(fd);
 //     char *line = get_next_line(fd);
 //     printf("%s", line);
 //     free(line);
-//     // while (line)
-//     // {
-//     //     printf("%s", line);
-//     //     free(line);
-//     //     line = get_next_line(fd);
-//     // }
+//     while (line)
+//     {
+//         printf("%s", line);
+//         free(line);
+//         line = get_next_line(fd);
+//     }
 //     close(fd);
 // }
 
@@ -100,7 +98,6 @@ char    *get_next_line(int fd)
 //     if (argc != 2)
 //         return (1);
 //     file = argv[1];
-//     //printf("%d\n", ft_strlen(""));
 //     ft_display_file(file);
 //     return (0);
 // }
